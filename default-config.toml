@@ -1,0 +1,14 @@
+[weather]
+# Received from https://home.openweathermap.org/api_keys
+key = ""
+
+[terminal]
+# The delay in milliseconds between terminal updates
+tick_delay = 30
+
+# What file to log to, leave empty or delete entirely to disable logging
+log_file = ""
+
+[frontend]
+# Date/time format, with the documentation of https://strftime.org/
+date_time_format = ""
