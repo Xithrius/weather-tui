@@ -9,7 +9,6 @@ use crossterm::{
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
 use log::debug;
-use tokio::time::sleep;
 use tui::{backend::CrosstermBackend, Terminal};
 
 use crate::{
@@ -73,17 +72,23 @@ pub async fn ui_driver(config: CompleteConfig, mut app: App) {
         terminal.show_cursor().unwrap();
     };
 
-    'outer: loop {
+    loop {
         terminal
             .draw(|frame| draw_ui(frame, &mut app, &config))
             .unwrap();
 
-        if let Some(Event::Input(Key::Char('q'))) = events.next().await {
-            quitting(terminal);
-            break 'outer;
+        if let Some(Event::Input(key)) = events.next().await {
+            match key {
+                Key::Char('q') => {
+                    quitting(terminal);
+                    break;
+                }
+                Key::Ctrl('r') => {
+                    todo!();
+                }
+                _ => {}
+            }
         }
-
-        sleep(Duration::from_millis(config.terminal.tick_delay)).await;
     }
 
     reset_terminal();

@@ -22,7 +22,9 @@ pub struct CompleteConfig {
 #[serde(default)]
 pub struct WeatherConfig {
     /// API key for receiving the weather in a location
-    pub key: String,
+    pub api_key: String,
+    /// The area (city,state_code) to scan
+    pub area: String,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]

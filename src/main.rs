@@ -1,5 +1,6 @@
 use color_eyre::eyre::{Error, Result, WrapErr};
 
+mod api;
 mod handlers;
 mod terminal;
 mod ui;
@@ -16,7 +17,7 @@ async fn main() -> Result<(), Error> {
 
     let config = CompleteConfig::new().wrap_err("Unable to read configuration file.")?;
 
-    let app = App::new();
+    let app = App::new(config.clone()).await;
 
     ui_driver(config, app).await;
 
