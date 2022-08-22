@@ -1,25 +1,27 @@
-use color_eyre::eyre::{Error, Result, WrapErr};
-
 mod api;
 mod handlers;
 mod terminal;
 mod ui;
 mod utils;
 
+use color_eyre::eyre::{Result, WrapErr};
+
 use crate::{
+    api::OpenWeatherMap,
     handlers::{app::App, config::CompleteConfig},
-    terminal::ui_driver,
 };
 
 #[tokio::main]
-async fn main() -> Result<(), Error> {
+async fn main() -> Result<()> {
     color_eyre::install().unwrap();
 
-    let config = CompleteConfig::new().wrap_err("Unable to read configuration file.")?;
+    let config = CompleteConfig::new()
+        .wrap_err("Fatal configuration error.")
+        .unwrap();
 
     let app = App::new(config.clone()).await;
 
-    ui_driver(config, app).await;
+    terminal::ui_driver(config, app).await;
 
-    Ok(())
+    std::process::exit(0)
 }

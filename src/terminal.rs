@@ -8,16 +8,17 @@ use crossterm::{
     execute,
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
-use log::debug;
+use rustyline::{At, Word};
 use tui::{backend::CrosstermBackend, Terminal};
 
+use crate::handlers::app::State;
 use crate::{
     handlers::{
-        app::App,
         config::CompleteConfig,
         event::{Config, Event, Events, Key},
     },
     ui::draw_ui,
+    App,
 };
 
 fn reset_terminal() {
@@ -38,13 +39,9 @@ fn init_terminal() -> Terminal<CrosstermBackend<Stdout>> {
 }
 
 pub async fn ui_driver(config: CompleteConfig, mut app: App) {
-    debug!("Started UI driver.");
-
     let original_hook = std::panic::take_hook();
 
     std::panic::set_hook(Box::new(move |panic| {
-        debug!("Panic hook hit.");
-
         reset_terminal();
         original_hook(panic);
     }));
@@ -78,15 +75,85 @@ pub async fn ui_driver(config: CompleteConfig, mut app: App) {
             .unwrap();
 
         if let Some(Event::Input(key)) = events.next().await {
-            match key {
-                Key::Char('q') => {
-                    quitting(terminal);
-                    break;
+            match app.state {
+                State::Normal => match key {
+                    Key::Char('i') => {
+                        app.state = State::Insert;
+                    }
+                    Key::Char('?') => {
+                        app.state = State::Help;
+                    }
+                    Key::Ctrl('p') => {
+                        panic!("Triggered on-purpose panic successfully.");
+                    }
+                    Key::Char('q') => {
+                        quitting(terminal);
+                        break;
+                    }
+                    _ => {}
+                },
+                State::Insert => {
+                    let input = &mut app.input_buffer;
+
+                    match key {
+                        Key::Char(c) => {
+                            input.insert(c, 1);
+                        }
+                        Key::Ctrl('f') | Key::Right => {
+                            input.move_forward(1);
+                        }
+                        Key::Ctrl('b') | Key::Left => {
+                            input.move_backward(1);
+                        }
+                        Key::Ctrl('a') | Key::Home => {
+                            input.move_home();
+                        }
+                        Key::Ctrl('e') | Key::End => {
+                            input.move_end();
+                        }
+                        Key::Alt('f') => {
+                            input.move_to_next_word(At::AfterEnd, Word::Emacs, 1);
+                        }
+                        Key::Alt('b') => {
+                            input.move_to_prev_word(Word::Emacs, 1);
+                        }
+                        Key::Ctrl('t') => {
+                            input.transpose_chars();
+                        }
+                        Key::Alt('t') => {
+                            input.transpose_words(1);
+                        }
+                        Key::Ctrl('u') => {
+                            input.discard_line();
+                        }
+                        Key::Ctrl('k') => {
+                            input.kill_line();
+                        }
+                        Key::Ctrl('w') => {
+                            input.delete_prev_word(Word::Emacs, 1);
+                        }
+                        Key::Ctrl('d') => {
+                            input.delete(1);
+                        }
+                        Key::Backspace | Key::Delete => {
+                            input.backspace(1);
+                        }
+                        Key::Esc => {
+                            app.state = State::Normal;
+                        }
+                        _ => {}
+                    }
                 }
-                Key::Ctrl('r') => {
-                    todo!();
-                }
-                _ => {}
+                State::Help => match key {
+                    Key::Char('q') => {
+                        quitting(terminal);
+                        break;
+                    }
+                    Key::Esc => {
+                        app.state = State::Normal;
+                    }
+                    _ => {}
+                },
             }
         }
     }

@@ -6,7 +6,7 @@ use serde::Deserialize;
 use crate::handlers::config::WeatherConfig;
 
 /// https://openweathermap.org/api/geocoding-api
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 #[allow(dead_code)]
 struct GeocodeResponse {
     name: String,
@@ -17,15 +17,16 @@ struct GeocodeResponse {
 }
 
 #[allow(dead_code)]
+#[derive(Debug, Clone)]
 pub struct OpenWeatherMap {
     api_key: String,
-    // area_data: &'static GeocodeResponse,
+    area_data: GeocodeResponse,
 }
 
 impl OpenWeatherMap {
     pub async fn new(config: WeatherConfig) -> Result<Self, Error> {
         let url = format!(
-            "http://api.openweathermap.org/geo/1.0/direct?q={}&limit=1&appid={}",
+            "https://api.openweathermap.org/geo/1.0/direct?q={}&limit=1&appid={}",
             config.area, config.api_key
         );
 
@@ -40,11 +41,14 @@ impl OpenWeatherMap {
             bail!("Geocode response was empty, could not locate area.");
         }
 
-        // let defined_area = info[0];
-
         Ok(Self {
             api_key: config.api_key,
-            // area_data: defined_area,
+            area_data: info[0].clone(),
         })
+    }
+
+    #[allow(dead_code)]
+    pub async fn get_temp(&self) -> String {
+        todo!()
     }
 }

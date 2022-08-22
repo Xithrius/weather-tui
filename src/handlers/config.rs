@@ -12,34 +12,40 @@ use crate::utils::pathing::config_path;
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 #[serde(default)]
 pub struct CompleteConfig {
-    /// Everything to do with the weather
-    pub weather: WeatherConfig,
     /// Internal functionality
     pub terminal: TerminalConfig,
+    /// Interacting with the OpenWeatherMap API
+    pub weather: WeatherConfig,
+    /// What everything looks like to the user
+    pub frontend: FrontendConfig,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(default)]
+pub struct TerminalConfig {
+    /// How often the terminal will update
+    pub tick_delay: u64,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 #[serde(default)]
 pub struct WeatherConfig {
-    /// API key for receiving the weather in a location
+    /// The key to acquire weather information with
     pub api_key: String,
-    /// The area (city,state_code) to scan
+    /// The area in which the user would like weather data from
     pub area: String,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
-#[serde(default)]
-pub struct TerminalConfig {
-    /// The delay in milliseconds between terminal updates
-    pub tick_delay: u64,
-    /// What file to log to, if any
-    pub log_file: String,
+pub struct FrontendConfig {
+    /// The margin around the main window from to the terminal border
+    pub margin: u16,
 }
 
-#[allow(dead_code)]
-pub struct FrontendConfig {
-    /// The date/time format of any timestamp
-    pub date_time_format: String,
+impl Default for TerminalConfig {
+    fn default() -> Self {
+        Self { tick_delay: 30 }
+    }
 }
 
 impl CompleteConfig {
@@ -59,7 +65,13 @@ impl CompleteConfig {
         } else if let Ok(config_contents) = read_to_string(&p) {
             let config: CompleteConfig = toml::from_str(config_contents.as_str()).unwrap();
 
-            // merge_args_into_config(&mut config, cli);
+            {
+                let w = &config.weather;
+
+                if w.api_key.is_empty() || w.area.is_empty() {
+                    bail!("Weather key required for this application to run.")
+                }
+            }
 
             Ok(config)
         } else {

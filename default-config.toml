@@ -1,14 +1,13 @@
-[weather]
-# Received from https://home.openweathermap.org/api_keys
-key = ""
-
 [terminal]
-# The delay in milliseconds between terminal updates
+# How often the terminal will update
 tick_delay = 30
 
-# What file to log to, leave empty or delete entirely to disable logging
-log_file = ""
+[weather]
+# The key to acquire weather information with
+api_key = ""
+# The area in which the user would like weather data from
+area = ""
 
 [frontend]
-# Date/time format, with the documentation of https://strftime.org/
-date_time_format = ""
+# The margin around the main window from to the terminal border
+margin = 0
