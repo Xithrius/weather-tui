@@ -51,12 +51,12 @@ mod tests {
     #[test]
     #[should_panic]
     #[cfg(any(
-    target_os = "ios",
-    target_os = "android",
-    target_os = "freebsd",
-    target_os = "dragonfly",
-    target_os = "openbsd",
-    target_os = "netbsd"
+        target_os = "ios",
+        target_os = "android",
+        target_os = "freebsd",
+        target_os = "dragonfly",
+        target_os = "openbsd",
+        target_os = "netbsd"
     ))]
     fn test_ios_config_path() {
         config_path("config.toml");
