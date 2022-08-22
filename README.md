@@ -1,6 +1,10 @@
 # weather-tui
+
 Weather in the terminal.
 
+## Warning
+
+This project is still in development, so the instructions below probably won't work. I'll remove this note once everything is in a stable state.
 
 ## Setup
 
