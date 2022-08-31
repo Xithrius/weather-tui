@@ -1,23 +1,10 @@
-use std::collections::HashMap;
-
 use color_eyre::eyre::{bail, Error, Result};
-use serde::Deserialize;
 
-use crate::handlers::config::WeatherConfig;
+use crate::{api::responses::GeocodeResponse, handlers::config::WeatherConfig};
 
-/// https://openweathermap.org/api/geocoding-api
-#[derive(Deserialize, Debug, Clone)]
-#[allow(dead_code)]
-struct GeocodeResponse {
-    name: String,
-    local_names: HashMap<String, String>,
-    lat: f64,
-    lon: f64,
-    country: String,
-}
+mod responses;
 
-#[allow(dead_code)]
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub struct OpenWeatherMap {
     api_key: String,
     area_data: GeocodeResponse,
@@ -47,7 +34,6 @@ impl OpenWeatherMap {
         })
     }
 
-    #[allow(dead_code)]
     pub async fn get_temp(&self) -> String {
         todo!()
     }

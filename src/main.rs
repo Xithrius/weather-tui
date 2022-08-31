@@ -6,10 +6,7 @@ mod utils;
 
 use color_eyre::eyre::{Result, WrapErr};
 
-use crate::{
-    api::OpenWeatherMap,
-    handlers::{app::App, config::CompleteConfig},
-};
+use crate::handlers::{app::App, config::CompleteConfig};
 
 #[tokio::main]
 async fn main() -> Result<()> {

@@ -1,7 +1,3 @@
-use std::collections::HashMap;
-
-use lazy_static::lazy_static;
-use maplit::hashmap;
 use tui::{
     backend::Backend,
     layout::{Constraint, Direction, Layout},
@@ -19,16 +15,11 @@ use crate::{
     utils::text::get_cursor_position,
 };
 
-lazy_static! {
-    pub static ref LAYOUTS: HashMap<State, Vec<Constraint>> = hashmap! {
-        State::Normal => vec![Constraint::Min(1)],
-        State::Insert => vec![Constraint::Min(1), Constraint::Length(3)],
-        State::Help => vec![Constraint::Min(1)]
-    };
-}
-
 pub fn draw_ui<T: Backend>(frame: &mut Frame<T>, app: &mut App, config: &CompleteConfig) {
-    let v_constraints = LAYOUTS.get(&app.state).unwrap();
+    let v_constraints = match app.state {
+        State::Insert => vec![Constraint::Min(1), Constraint::Length(3)],
+        _ => vec![Constraint::Min(1)],
+    };
 
     let v_chunks = Layout::default()
         .direction(Direction::Vertical)
