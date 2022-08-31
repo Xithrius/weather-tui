@@ -3,7 +3,7 @@ use std::{cmp::Eq, hash::Hash};
 use color_eyre::eyre::WrapErr;
 use rustyline::line_buffer::LineBuffer;
 
-use crate::{CompleteConfig, api::OpenWeatherMap};
+use crate::{api::OpenWeatherMap, CompleteConfig};
 
 #[derive(Debug, Clone, Eq, Hash, PartialEq)]
 pub enum State {

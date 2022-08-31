@@ -4,6 +4,7 @@ use crate::{api::responses::GeocodeResponse, handlers::config::WeatherConfig};
 
 mod responses;
 
+#[allow(dead_code)]
 #[derive(Debug)]
 pub struct OpenWeatherMap {
     api_key: String,
@@ -34,6 +35,7 @@ impl OpenWeatherMap {
         })
     }
 
+    #[allow(dead_code)]
     pub async fn get_temp(&self) -> String {
         todo!()
     }
