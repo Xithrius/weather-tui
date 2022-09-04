@@ -38,16 +38,16 @@ fn init_terminal() -> Terminal<CrosstermBackend<Stdout>> {
 }
 
 fn quit_terminal(mut terminal: Terminal<CrosstermBackend<Stdout>>) {
-        disable_raw_mode().unwrap();
+    disable_raw_mode().unwrap();
 
-        execute!(
-            terminal.backend_mut(),
-            LeaveAlternateScreen,
-            DisableMouseCapture
-        )
-        .unwrap();
+    execute!(
+        terminal.backend_mut(),
+        LeaveAlternateScreen,
+        DisableMouseCapture
+    )
+    .unwrap();
 
-        terminal.show_cursor().unwrap();
+    terminal.show_cursor().unwrap();
 }
 
 pub async fn ui_driver(config: CompleteConfig, mut app: App) {
