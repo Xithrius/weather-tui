@@ -3,7 +3,10 @@ use std::{cmp::Eq, hash::Hash};
 use color_eyre::eyre::WrapErr;
 use rustyline::line_buffer::LineBuffer;
 
-use crate::{api::OpenWeatherMap, CompleteConfig};
+use crate::{
+    api::{responses::Forecast5Response, OpenWeatherMap},
+    CompleteConfig,
+};
 
 #[derive(Debug, Clone, Eq, Hash, PartialEq)]
 pub enum State {
@@ -18,8 +21,10 @@ pub struct App {
     pub state: State,
     /// An input box for the user
     pub input_buffer: LineBuffer,
-    /// Interactions with the weather API.
+    /// Interactions with the weather API
     pub api: OpenWeatherMap,
+    /// Currently saved weather data
+    pub weather_data: Option<Forecast5Response>,
 }
 
 impl App {
@@ -33,6 +38,7 @@ impl App {
             state: State::Normal,
             input_buffer: LineBuffer::with_capacity(4096),
             api: weather_api,
+            weather_data: None,
         }
     }
 }

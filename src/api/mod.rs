@@ -1,14 +1,16 @@
 use color_eyre::eyre::{bail, Error, Result};
 
-use crate::{api::responses::GeocodeResponse, handlers::config::WeatherConfig};
+use crate::{
+    api::responses::{Forecast5Response, GeocodeResponse},
+    handlers::config::WeatherConfig,
+};
 
-mod responses;
+pub mod responses;
 
-#[allow(dead_code)]
 #[derive(Debug)]
 pub struct OpenWeatherMap {
     api_key: String,
-    area_data: GeocodeResponse,
+    area: GeocodeResponse,
 }
 
 impl OpenWeatherMap {
@@ -18,12 +20,7 @@ impl OpenWeatherMap {
             config.area, config.api_key
         );
 
-        let info = reqwest::get(url)
-            .await
-            .unwrap()
-            .json::<Vec<GeocodeResponse>>()
-            .await
-            .unwrap();
+        let info: Vec<GeocodeResponse> = reqwest::get(url).await.unwrap().json().await.unwrap();
 
         if info.is_empty() {
             bail!("Geocode response was empty, could not locate area.");
@@ -31,12 +28,18 @@ impl OpenWeatherMap {
 
         Ok(Self {
             api_key: config.api_key,
-            area_data: info[0].clone(),
+            area: info[0].clone(),
         })
     }
 
-    #[allow(dead_code)]
-    pub async fn get_temp(&self) -> String {
-        todo!()
+    pub async fn get_5_day_forecast(&self) -> Forecast5Response {
+        let url = format!(
+            "https://api.openweathermap.org/data/2.5/forecast?lat={}&lon={}&appid={}",
+            self.area.lat, self.area.lon, self.api_key
+        );
+
+        let response: Forecast5Response = reqwest::get(url).await.unwrap().json().await.unwrap();
+
+        response
     }
 }

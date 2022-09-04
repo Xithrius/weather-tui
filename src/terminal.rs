@@ -11,14 +11,13 @@ use crossterm::{
 use rustyline::{At, Word};
 use tui::{backend::CrosstermBackend, Terminal};
 
-use crate::handlers::app::State;
 use crate::{
     handlers::{
+        app::{App, State},
         config::CompleteConfig,
         event::{Config, Event, Events, Key},
     },
     ui::draw_ui,
-    App,
 };
 
 fn reset_terminal() {
@@ -36,6 +35,19 @@ fn init_terminal() -> Terminal<CrosstermBackend<Stdout>> {
     let backend = CrosstermBackend::new(stdout);
 
     Terminal::new(backend).unwrap()
+}
+
+fn quit_terminal(mut terminal: Terminal<CrosstermBackend<Stdout>>) {
+        disable_raw_mode().unwrap();
+
+        execute!(
+            terminal.backend_mut(),
+            LeaveAlternateScreen,
+            DisableMouseCapture
+        )
+        .unwrap();
+
+        terminal.show_cursor().unwrap();
 }
 
 pub async fn ui_driver(config: CompleteConfig, mut app: App) {
@@ -56,18 +68,7 @@ pub async fn ui_driver(config: CompleteConfig, mut app: App) {
 
     terminal.clear().unwrap();
 
-    let quitting = |mut terminal: Terminal<CrosstermBackend<Stdout>>| {
-        disable_raw_mode().unwrap();
-
-        execute!(
-            terminal.backend_mut(),
-            LeaveAlternateScreen,
-            DisableMouseCapture
-        )
-        .unwrap();
-
-        terminal.show_cursor().unwrap();
-    };
+    app.weather_data = Some(app.api.get_5_day_forecast().await);
 
     loop {
         terminal
@@ -80,6 +81,9 @@ pub async fn ui_driver(config: CompleteConfig, mut app: App) {
                     Key::Char('i') => {
                         app.state = State::Insert;
                     }
+                    Key::Ctrl('r') => {
+                        app.weather_data = Some(app.api.get_5_day_forecast().await);
+                    }
                     Key::Char('?') => {
                         app.state = State::Help;
                     }
@@ -87,7 +91,7 @@ pub async fn ui_driver(config: CompleteConfig, mut app: App) {
                         panic!("Triggered on-purpose panic successfully.");
                     }
                     Key::Char('q') => {
-                        quitting(terminal);
+                        quit_terminal(terminal);
                         break;
                     }
                     _ => {}
@@ -146,7 +150,7 @@ pub async fn ui_driver(config: CompleteConfig, mut app: App) {
                 }
                 State::Help => match key {
                     Key::Char('q') => {
-                        quitting(terminal);
+                        quit_terminal(terminal);
                         break;
                     }
                     Key::Esc => {

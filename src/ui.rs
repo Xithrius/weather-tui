@@ -1,10 +1,13 @@
+use std::string::String;
+
+use chrono::{DateTime, NaiveDateTime, Utc};
 use tui::{
     backend::Backend,
     layout::{Constraint, Direction, Layout},
     style::{Color, Style},
     terminal::Frame,
     text::{Span, Spans},
-    widgets::{Block, Borders, Paragraph},
+    widgets::{Block, Borders, Paragraph, Row, Table},
 };
 
 use crate::{
@@ -12,7 +15,7 @@ use crate::{
         app::{App, State},
         config::CompleteConfig,
     },
-    utils::text::get_cursor_position,
+    utils::text::{get_cursor_position, vector_column_max},
 };
 
 pub fn draw_ui<T: Backend>(frame: &mut Frame<T>, app: &mut App, config: &CompleteConfig) {
@@ -27,11 +30,43 @@ pub fn draw_ui<T: Backend>(frame: &mut Frame<T>, app: &mut App, config: &Complet
         .constraints(v_constraints.as_ref())
         .split(frame.size());
 
-    let table = Paragraph::new("Some text").block(Block::default().borders(Borders::ALL));
+    // let if let interval_data = app.weather_data;
+
+    let interval_data = if let Some(data) = app.weather_data.clone() {
+        data.list
+            .iter()
+            .map(|item| {
+                vec![
+                    DateTime::<Utc>::from_utc(
+                        NaiveDateTime::from_timestamp(item.dt as i64, 0),
+                        Utc,
+                    )
+                    .to_string(),
+                    item.weather[0].description.clone(),
+                ]
+            })
+            .collect::<Vec<Vec<String>>>()
+    } else {
+        vec![]
+    };
+
+    let table_widths = vector_column_max(&interval_data)
+        .into_iter()
+        .map(Constraint::Min)
+        .collect::<Vec<Constraint>>();
+
+    let table = Table::new(
+        interval_data
+            .iter()
+            .map(|i| Row::new(i.iter().map(String::as_str).collect::<Vec<&str>>()))
+            .collect::<Vec<Row>>(),
+    )
+    .block(Block::default().borders(Borders::ALL).title("[ Weather ]"))
+    .widths(&table_widths);
 
     frame.render_widget(table, v_chunks[0]);
 
-    if let State::Insert = app.state {
+    if app.state == State::Insert {
         let input_buffer = &app.input_buffer;
 
         let cursor_pos = get_cursor_position(input_buffer);
