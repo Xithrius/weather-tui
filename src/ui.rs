@@ -1,10 +1,10 @@
-use std::string::String;
+use std::string::{String, ToString};
 
-use chrono::{DateTime, NaiveDateTime, Utc};
+use chrono::{DateTime, Local, NaiveDateTime, Utc};
 use tui::{
     backend::Backend,
     layout::{Constraint, Direction, Layout},
-    style::{Color, Style},
+    style::{Color, Modifier, Style},
     terminal::Frame,
     text::{Span, Spans},
     widgets::{Block, Borders, Paragraph, Row, Table},
@@ -30,9 +30,7 @@ pub fn draw_ui<T: Backend>(frame: &mut Frame<T>, app: &mut App, config: &Complet
         .constraints(v_constraints.as_ref())
         .split(frame.size());
 
-    // let if let interval_data = app.weather_data;
-
-    let interval_data = if let Some(data) = app.weather_data.clone() {
+    let mut interval_data = if let Some(data) = app.weather_data.clone() {
         data.list
             .iter()
             .map(|item| {
@@ -43,6 +41,8 @@ pub fn draw_ui<T: Backend>(frame: &mut Frame<T>, app: &mut App, config: &Complet
                     )
                     .to_string(),
                     item.weather[0].description.clone(),
+                    item.main.temp.to_string(),
+                    item.main.feels_like.to_string(),
                 ]
             })
             .collect::<Vec<Vec<String>>>()
@@ -50,10 +50,19 @@ pub fn draw_ui<T: Backend>(frame: &mut Frame<T>, app: &mut App, config: &Complet
         vec![]
     };
 
+    let table_headers = vec!["Date/time", "Description", "Temperature", "Feels like"]
+        .iter()
+        .map(ToString::to_string)
+        .collect::<Vec<String>>();
+
+    interval_data.push(table_headers.clone());
+
     let table_widths = vector_column_max(&interval_data)
         .into_iter()
         .map(Constraint::Min)
         .collect::<Vec<Constraint>>();
+
+    interval_data.pop();
 
     let table = Table::new(
         interval_data
@@ -61,8 +70,14 @@ pub fn draw_ui<T: Backend>(frame: &mut Frame<T>, app: &mut App, config: &Complet
             .map(|i| Row::new(i.iter().map(String::as_str).collect::<Vec<&str>>()))
             .collect::<Vec<Row>>(),
     )
-    .block(Block::default().borders(Borders::ALL).title("[ Weather ]"))
-    .widths(&table_widths);
+    .block(Block::default().borders(Borders::ALL).title(format!(
+        "[ {} ] [ Units: {} ]",
+        Local::now().format("%c"),
+        config.weather.units
+    )))
+    .widths(&table_widths)
+    .column_spacing(2)
+    .header(Row::new(table_headers).style(Style::default().add_modifier(Modifier::BOLD)));
 
     frame.render_widget(table, v_chunks[0]);
 

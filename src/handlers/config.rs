@@ -27,13 +27,15 @@ pub struct TerminalConfig {
     pub tick_delay: u64,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(default)]
 pub struct WeatherConfig {
     /// The key to acquire weather information with
     pub api_key: String,
     /// The area in which the user would like weather data from
     pub area: String,
+    /// The unit system to use: standard, metric, or imperial
+    pub units: String,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
@@ -45,6 +47,16 @@ pub struct FrontendConfig {
 impl Default for TerminalConfig {
     fn default() -> Self {
         Self { tick_delay: 30 }
+    }
+}
+
+impl Default for WeatherConfig {
+    fn default() -> Self {
+        Self {
+            api_key: "".to_string(),
+            area: "".to_string(),
+            units: "metric".to_string(),
+        }
     }
 }
 

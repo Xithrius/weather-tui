@@ -11,6 +11,7 @@ pub mod responses;
 pub struct OpenWeatherMap {
     api_key: String,
     area: GeocodeResponse,
+    units: String,
 }
 
 impl OpenWeatherMap {
@@ -29,13 +30,14 @@ impl OpenWeatherMap {
         Ok(Self {
             api_key: config.api_key,
             area: info[0].clone(),
+            units: config.units,
         })
     }
 
     pub async fn get_5_day_forecast(&self) -> Forecast5Response {
         let url = format!(
-            "https://api.openweathermap.org/data/2.5/forecast?lat={}&lon={}&appid={}",
-            self.area.lat, self.area.lon, self.api_key
+            "https://api.openweathermap.org/data/2.5/forecast?lat={}&lon={}&units={}&appid={}",
+            self.area.lat, self.area.lon, self.units, self.api_key
         );
 
         let response: Forecast5Response = reqwest::get(url).await.unwrap().json().await.unwrap();

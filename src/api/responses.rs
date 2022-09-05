@@ -45,9 +45,9 @@ pub struct Forecast5ListItem {
     ///
     pub weather: Vec<Forecast5ListItemWeather>,
     ///
-    pub clouds: Forecast5ListItemClouds,
+    clouds: Forecast5ListItemClouds,
     ///
-    pub wind: Forecast5ListItemWind,
+    wind: Forecast5ListItemWind,
     /// Average visibility, metres with a maximum of 10km
     visibility: usize,
     /// Probability of precipitation, %
@@ -63,9 +63,9 @@ pub struct Forecast5ListItem {
 #[derive(Deserialize, Debug, Clone)]
 pub struct Forecast5ListItemMain {
     /// Temperature
-    temp: f64,
+    pub temp: f64,
     /// This temperature parameter accounts for the human perception of weather
-    feels_like: f64,
+    pub feels_like: f64,
     /// Minimum temperature at the moment of calculation
     temp_min: f64,
     /// Maximum temperature at the moment of calculation
