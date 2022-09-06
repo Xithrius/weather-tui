@@ -53,7 +53,7 @@ pub struct Forecast5ListItem {
     /// Probability of precipitation, %
     pop: f64,
     ///
-    rain: Option<Forecast5ListItemRain>,
+    rain: Option<serde_json::Value>,
     ///
     sys: Forecast5ListItemSys,
     /// Time of data forecasted, ISO, UTC
@@ -108,12 +108,6 @@ pub struct Forecast5ListItemWind {
     deg: f64,
     /// Wind gust
     gust: f64,
-}
-
-#[derive(Deserialize, Debug, Clone)]
-pub struct Forecast5ListItemRain {
-    /// Rain volume for last 3 hours, mm
-    _3h: f64,
 }
 
 #[derive(Deserialize, Debug, Clone)]

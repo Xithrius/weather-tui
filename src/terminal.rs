@@ -8,12 +8,11 @@ use crossterm::{
     execute,
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
-use rustyline::{At, Word};
 use tui::{backend::CrosstermBackend, Terminal};
 
 use crate::{
     handlers::{
-        app::{App, State},
+        app::App,
         config::CompleteConfig,
         event::{Config, Event, Events, Key},
     },
@@ -76,88 +75,23 @@ pub async fn ui_driver(config: CompleteConfig, mut app: App) {
             .unwrap();
 
         if let Some(Event::Input(key)) = events.next().await {
-            match app.state {
-                State::Normal => match key {
-                    Key::Char('i') => {
-                        app.state = State::Insert;
-                    }
-                    Key::Ctrl('r') => {
-                        app.weather_data = Some(app.api.get_5_day_forecast().await);
-                    }
-                    Key::Char('?') => {
-                        app.state = State::Help;
-                    }
-                    Key::Ctrl('p') => {
-                        panic!("Triggered on-purpose panic successfully.");
-                    }
-                    Key::Char('q') => {
-                        quit_terminal(terminal);
-                        break;
-                    }
-                    _ => {}
-                },
-                State::Insert => {
-                    let input = &mut app.input_buffer;
-
-                    match key {
-                        Key::Char(c) => {
-                            input.insert(c, 1);
-                        }
-                        Key::Ctrl('f') | Key::Right => {
-                            input.move_forward(1);
-                        }
-                        Key::Ctrl('b') | Key::Left => {
-                            input.move_backward(1);
-                        }
-                        Key::Ctrl('a') | Key::Home => {
-                            input.move_home();
-                        }
-                        Key::Ctrl('e') | Key::End => {
-                            input.move_end();
-                        }
-                        Key::Alt('f') => {
-                            input.move_to_next_word(At::AfterEnd, Word::Emacs, 1);
-                        }
-                        Key::Alt('b') => {
-                            input.move_to_prev_word(Word::Emacs, 1);
-                        }
-                        Key::Ctrl('t') => {
-                            input.transpose_chars();
-                        }
-                        Key::Alt('t') => {
-                            input.transpose_words(1);
-                        }
-                        Key::Ctrl('u') => {
-                            input.discard_line();
-                        }
-                        Key::Ctrl('k') => {
-                            input.kill_line();
-                        }
-                        Key::Ctrl('w') => {
-                            input.delete_prev_word(Word::Emacs, 1);
-                        }
-                        Key::Ctrl('d') => {
-                            input.delete(1);
-                        }
-                        Key::Backspace | Key::Delete => {
-                            input.backspace(1);
-                        }
-                        Key::Esc => {
-                            app.state = State::Normal;
-                        }
-                        _ => {}
-                    }
+            match key {
+                // Quit the application
+                Key::Esc | Key::Char('q') => {
+                    quit_terminal(terminal);
+                    break;
                 }
-                State::Help => match key {
-                    Key::Char('q') => {
-                        quit_terminal(terminal);
-                        break;
-                    }
-                    Key::Esc => {
-                        app.state = State::Normal;
-                    }
-                    _ => {}
-                },
+
+                // Refresh the data, doing another API call
+                Key::Ctrl('r') => {
+                    app.weather_data = Some(app.api.get_5_day_forecast().await);
+                }
+
+                // Manual panic
+                Key::Ctrl('p') => {
+                    panic!("Triggered on-purpose panic successfully.");
+                }
+                _ => {}
             }
         }
     }
