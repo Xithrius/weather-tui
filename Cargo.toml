@@ -20,7 +20,7 @@ toml = "0.5.9"
 color-eyre = "0.6.2"
 chrono = "0.4.22"
 textwrap = "0.15.0"
-serde_json = "1.0.85"
+serde_json = "1.0.86"
 
 [profile.dev.package.backtrace]
 opt-level = 3
