@@ -53,8 +53,8 @@ impl Default for TerminalConfig {
 impl Default for WeatherConfig {
     fn default() -> Self {
         Self {
-            api_key: "".to_string(),
-            area: "".to_string(),
+            api_key: String::new(),
+            area: String::new(),
             units: "metric".to_string(),
         }
     }
@@ -74,7 +74,7 @@ impl CompleteConfig {
             file.write_all(default_toml_string.as_bytes()).unwrap();
 
             bail!("Configuration was generated at {path_str}, please fill it out with necessary information.")
-        } else if let Ok(config_contents) = read_to_string(&p) {
+        } else if let Ok(config_contents) = read_to_string(p) {
             let config: Self = toml::from_str(config_contents.as_str()).unwrap();
 
             {

@@ -111,8 +111,8 @@ mod tests {
     #[test]
     fn test_vector_column_max_strings() {
         let vec = vec![
-            vec!["".to_string(), "another".to_string()],
-            vec!["".to_string(), "the last string".to_string()],
+            vec![String::new(), "another".to_string()],
+            vec![String::new(), "the last string".to_string()],
         ];
 
         let mut output_vec_all = vector_column_max(&vec);
