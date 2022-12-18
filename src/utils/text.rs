@@ -17,12 +17,12 @@ pub fn align_text(text: &str, alignment: &str, maximum_length: usize) -> String 
     }
 
     match alignment {
-        "right" => format!("{}{}", " ".repeat(maximum_length - dw), text),
+        "right" => format!("{}{text}", " ".repeat(maximum_length - dw)),
         "center" => {
             let side_spaces = " ".repeat(
                 ((maximum_length as u16 / 2) - (((dw / 2) as f32).floor() as u16)) as usize,
             );
-            format!("{}{}{}", side_spaces, text, side_spaces)
+            format!("{side_spaces}{text}{side_spaces}")
         }
         _ => text.to_string(),
     }

@@ -29,7 +29,7 @@ pub fn draw_ui<T: Backend>(frame: &mut Frame<T>, app: &mut App, config: &Complet
             .map(|item| {
                 vec![
                     DateTime::<Utc>::from_utc(
-                        NaiveDateTime::from_timestamp(item.dt as i64, 0),
+                        NaiveDateTime::from_timestamp_opt(item.dt as i64, 0).unwrap(),
                         Utc,
                     )
                     .to_string(),
