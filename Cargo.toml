@@ -16,7 +16,7 @@ serde = { version = "1.0.148", features = [ "derive" ] }
 tokio = { version = "1.22.0", features = [ "full" ] }
 reqwest = { version = "0.11.13", features = [ "json" ] }
 crossterm = "0.25.0"
-toml = "0.5.9"
+toml = "0.5.10"
 color-eyre = "0.6.2"
 chrono = "0.4.23"
 textwrap = "0.16.0"
