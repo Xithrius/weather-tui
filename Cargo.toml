@@ -18,7 +18,7 @@ reqwest = { version = "0.11.13", features = [ "json" ] }
 crossterm = "0.25.0"
 toml = "0.5.9"
 color-eyre = "0.6.2"
-chrono = "0.4.23"
+chrono = "0.4.24"
 textwrap = "0.16.0"
 serde_json = "1.0.89"
 
