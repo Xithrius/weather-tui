@@ -12,7 +12,7 @@ categories = ["command-line-utilities"]
 
 [dependencies]
 tui = { version = "0.19.0", default-features = false, features = [ "crossterm" ] }
-serde = { version = "1.0.148", features = [ "derive" ] }
+serde = { version = "1.0.160", features = [ "derive" ] }
 tokio = { version = "1.22.0", features = [ "full" ] }
 reqwest = { version = "0.11.13", features = [ "json" ] }
 crossterm = "0.25.0"
