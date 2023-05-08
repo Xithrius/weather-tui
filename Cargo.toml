@@ -1,7 +1,9 @@
 [package]
 name = "weather-tui"
 version = "0.1.0"
+authors = ["Xithrius <xithrius@gmail.com>"]
 edition = "2021"
+rust-version = "1.61.0"
 description = "Weather in the terminal."
 documentation = "https://github.com/Xithrius/weather-tui"
 homepage = "https://github.com/Xithrius/weather-tui"
@@ -11,24 +13,28 @@ keywords = ["tui", "weather"]
 categories = ["command-line-utilities"]
 
 [dependencies]
-tui = { version = "0.19.0", default-features = false, features = [ "crossterm" ] }
+tui = { package = "ratatui", version = "0.20.1", default-features = false, features = [ "crossterm", "serde" ] }
 serde = { version = "1.0.148", features = [ "derive" ] }
 tokio = { version = "1.22.0", features = [ "full" ] }
 reqwest = { version = "0.11.13", features = [ "json" ] }
-crossterm = "0.25.0"
-toml = "0.5.9"
+crossterm = "0.26.1"
+toml = "0.7.2"
 color-eyre = "0.6.2"
 chrono = "0.4.23"
 textwrap = "0.16.0"
 serde_json = "1.0.89"
-
-[profile.dev.package.backtrace]
-opt-level = 3
 
 [[bin]]
 bench = false
 path = "src/main.rs"
 name = "wt"
 
+[profile.dev]
+lto = "off"
+
+[profile.dev.package.backtrace]
+opt-level = 3
+
 [profile.release]
 lto = "thin"
+debug = 1

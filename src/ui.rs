@@ -51,7 +51,6 @@ pub fn draw_ui<T: Backend>(frame: &mut Frame<T>, app: &mut App, config: &Complet
     interval_data.push(table_headers.clone());
 
     let table_widths = vector_column_max(&interval_data)
-        .into_iter()
         .map(Constraint::Min)
         .collect::<Vec<Constraint>>();
 
