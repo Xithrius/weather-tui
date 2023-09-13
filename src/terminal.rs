@@ -60,8 +60,7 @@ pub async fn ui_driver(config: CompleteConfig, mut app: App) {
     let mut events = Events::with_config(Config {
         exit_key: Key::Null,
         tick_rate: Duration::from_millis(config.terminal.tick_delay),
-    })
-    .await;
+    });
 
     let mut terminal = init_terminal();
 

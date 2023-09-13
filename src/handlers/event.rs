@@ -52,7 +52,7 @@ pub struct Config {
 }
 
 impl Events {
-    pub async fn with_config(config: Config) -> Self {
+    pub fn with_config(config: Config) -> Self {
         let (tx, rx) = mpsc::channel(100);
 
         tokio::spawn(async move {
@@ -107,6 +107,7 @@ impl Events {
                                 MouseEventKind::Up(button) => Key::ReleasedButton(button),
                                 MouseEventKind::Drag(button) => Key::Drag(button),
                                 MouseEventKind::Moved => Key::Moved,
+                                _ => Key::Null,
                             };
 
                             if let Err(err) = tx.send(Event::Input(key)).await {

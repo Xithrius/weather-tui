@@ -28,8 +28,8 @@ pub fn draw_ui<T: Backend>(frame: &mut Frame<T>, app: &mut App, config: &Complet
             .iter()
             .map(|item| {
                 vec![
-                    DateTime::<Utc>::from_utc(
-                        NaiveDateTime::from_timestamp_opt(item.dt as i64, 0).unwrap(),
+                    DateTime::<Utc>::from_naive_utc_and_offset(
+                        NaiveDateTime::from_timestamp_opt(item.dt.try_into().unwrap(), 0).unwrap(),
                         Utc,
                     )
                     .to_string(),
@@ -43,7 +43,7 @@ pub fn draw_ui<T: Backend>(frame: &mut Frame<T>, app: &mut App, config: &Complet
         vec![]
     };
 
-    let table_headers = vec!["Date/time", "Description", "Temperature", "Feels like"]
+    let table_headers = ["Date/time", "Description", "Temperature", "Feels like"]
         .iter()
         .map(ToString::to_string)
         .collect::<Vec<String>>();
@@ -59,8 +59,7 @@ pub fn draw_ui<T: Backend>(frame: &mut Frame<T>, app: &mut App, config: &Complet
     let table = Table::new(
         interval_data
             .iter()
-            .map(|i| Row::new(i.iter().map(String::as_str).collect::<Vec<&str>>()))
-            .collect::<Vec<Row>>(),
+            .map(|i| Row::new(i.iter().map(String::as_str))),
     )
     .block(Block::default().borders(Borders::ALL).title(format!(
         "[ {} ] [ Area: {} ] [ Units: {} ]",
