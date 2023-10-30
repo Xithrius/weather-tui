@@ -14,7 +14,7 @@ categories = ["command-line-utilities"]
 
 [dependencies]
 tui = { package = "ratatui", version = "0.23.0", default-features = false, features = [ "crossterm", "serde" ] }
-serde = { version = "1.0.188", features = [ "derive" ] }
+serde = { version = "1.0.190", features = [ "derive" ] }
 tokio = { version = "1.32.0", features = [ "full" ] }
 reqwest = { version = "0.11.20", features = [ "json" ] }
 crossterm = "0.27.0"
