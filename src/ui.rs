@@ -14,7 +14,7 @@ use crate::{
     utils::text::vector_column_max,
 };
 
-pub fn draw_ui<T: Backend>(frame: &mut Frame<T>, app: &mut App, config: &CompleteConfig) {
+pub fn draw_ui<T: Backend>(frame: &mut Frame<T>, app: &App, config: &CompleteConfig) {
     let v_constraints = vec![Constraint::Min(1)];
 
     let v_chunks = Layout::default()

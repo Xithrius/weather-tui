@@ -70,7 +70,7 @@ pub async fn ui_driver(config: CompleteConfig, mut app: App) {
 
     loop {
         terminal
-            .draw(|frame| draw_ui(frame, &mut app, &config))
+            .draw(|frame| draw_ui(frame, &app, &config))
             .unwrap();
 
         if let Some(Event::Input(key)) = events.next().await {
