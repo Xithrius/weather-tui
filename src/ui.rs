@@ -1,8 +1,8 @@
 use std::string::{String, ToString};
 
-use chrono::{DateTime, Local, NaiveDateTime, Utc};
+// use chrono::{DateTime, Local, NaiveDateTime, Utc};
+use chrono::Local;
 use tui::{
-    backend::Backend,
     layout::{Constraint, Direction, Layout},
     style::{Modifier, Style},
     terminal::Frame,
@@ -14,13 +14,13 @@ use crate::{
     utils::text::vector_column_max,
 };
 
-pub fn draw_ui<T: Backend>(frame: &mut Frame<T>, app: &App, config: &CompleteConfig) {
+pub fn draw_ui(frame: &mut Frame, app: &App, config: &CompleteConfig) {
     let v_constraints = vec![Constraint::Min(1)];
 
     let v_chunks = Layout::default()
         .direction(Direction::Vertical)
         .margin(config.frontend.margin)
-        .constraints(v_constraints.as_ref())
+        .constraints(v_constraints)
         .split(frame.size());
 
     let mut interval_data = if let Some(data) = app.weather_data.clone() {
@@ -28,11 +28,11 @@ pub fn draw_ui<T: Backend>(frame: &mut Frame<T>, app: &App, config: &CompleteCon
             .iter()
             .map(|item| {
                 vec![
-                    DateTime::<Utc>::from_naive_utc_and_offset(
-                        NaiveDateTime::from_timestamp_opt(item.dt.try_into().unwrap(), 0).unwrap(),
-                        Utc,
-                    )
-                    .to_string(),
+                    // DateTime::<Utc>::from_naive_utc_and_offset(
+                    //     DateTime::from_naive_utc_and_offset(item.dt.try_into().unwrap(), 0).unwrap(),
+                    //     Utc,
+                    // )
+                    // .to_string(),
                     item.weather[0].description.clone(),
                     item.main.temp.to_string(),
                     item.main.feels_like.to_string(),
@@ -60,6 +60,7 @@ pub fn draw_ui<T: Backend>(frame: &mut Frame<T>, app: &App, config: &CompleteCon
         interval_data
             .iter()
             .map(|i| Row::new(i.iter().map(String::as_str))),
+        &[Constraint::Percentage(100)],
     )
     .block(Block::default().borders(Borders::ALL).title(format!(
         "[ {} ] [ Area: {} ] [ Units: {} ]",

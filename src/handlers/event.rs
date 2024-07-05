@@ -4,6 +4,7 @@ use crossterm::event::{self, Event as CEvent, KeyCode, KeyModifiers, MouseButton
 use tokio::{sync::mpsc, time::Instant};
 
 #[derive(Debug, Clone, Copy)]
+#[allow(dead_code)]
 pub enum Key {
     // Keyboard controls
     Backspace,
@@ -46,6 +47,7 @@ pub struct Events {
 }
 
 #[derive(Debug, Clone, Copy)]
+#[allow(dead_code)]
 pub struct Config {
     pub exit_key: Key,
     pub tick_rate: Duration,

@@ -14,7 +14,7 @@ use crate::utils::pathing::config_path;
 pub struct CompleteConfig {
     /// Internal functionality
     pub terminal: TerminalConfig,
-    /// Interacting with the OpenWeatherMap API
+    /// Interacting with the `OpenWeatherMap` API
     pub weather: WeatherConfig,
     /// What everything looks like to the user
     pub frontend: FrontendConfig,

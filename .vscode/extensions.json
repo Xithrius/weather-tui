@@ -1,3 +1,6 @@
 {
-  "recommendations": ["serayuzgur.crates", "rust-lang.rust-analyzer"]
+    "recommendations": [
+        "serayuzgur.crates",
+        "rust-lang.rust-analyzer"
+    ],
 }

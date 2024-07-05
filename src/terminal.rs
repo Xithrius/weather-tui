@@ -69,9 +69,7 @@ pub async fn ui_driver(config: CompleteConfig, mut app: App) {
     app.weather_data = Some(app.api.get_5_day_forecast().await);
 
     loop {
-        terminal
-            .draw(|frame| draw_ui(frame, &app, &config))
-            .unwrap();
+        terminal.draw(|f| draw_ui(f, &app, &config)).unwrap();
 
         if let Some(Event::Input(key)) = events.next().await {
             match key {

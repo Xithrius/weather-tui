@@ -40,21 +40,21 @@ pub struct Forecast5Response {
 pub struct Forecast5ListItem {
     /// Time of data forecasted, unix, UTC
     pub dt: usize,
-    ///
+    /// Main weather
     pub main: Forecast5ListItemMain,
-    ///
+    /// Weather
     pub weather: Vec<Forecast5ListItemWeather>,
-    ///
+    /// Clouds
     clouds: Forecast5ListItemClouds,
-    ///
+    /// Wind
     wind: Forecast5ListItemWind,
     /// Average visibility, metres with a maximum of 10km
     visibility: usize,
     /// Probability of precipitation, %
     pop: f64,
-    ///
+    /// Rain
     rain: Option<serde_json::Value>,
-    ///
+    /// Something about the system
     sys: Forecast5ListItemSys,
     /// Time of data forecasted, ISO, UTC
     dt_txt: String,
@@ -122,7 +122,7 @@ pub struct Forecast5City {
     id: usize,
     /// City name
     name: String,
-    ///
+    /// Coordinates of the forcast
     coord: Forecast5CityCoord,
     /// Country code (GB, JP etc)
     country: String,

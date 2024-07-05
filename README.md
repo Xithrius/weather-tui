@@ -2,7 +2,6 @@
 
 [![CI](https://github.com/Xithrius/weather-tui/actions/workflows/ci.yml/badge.svg)](https://github.com/Xithrius/weather-tui/actions/workflows/ci.yml)
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/Xithrius/weather-tui/main.svg)](https://results.pre-commit.ci/latest/github/Xithrius/weather-tui/main)
-[![Lines of code](https://tokei.rs/b1/github/Xithrius/weather-tui?category=code)](https://github.com/Xithrius/weather-tui)
 [![Crate Status](https://img.shields.io/crates/v/weather-tui.svg)](https://crates.io/crates/weather-tui)
 
 ![image](https://user-images.githubusercontent.com/15021300/188537621-bd22eb66-0239-4af1-a3db-8147423983df.png)
