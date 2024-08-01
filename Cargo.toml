@@ -17,7 +17,7 @@ tui = { package = "ratatui", version = "0.27.0", default-features = false, featu
 serde = { version = "1.0.203", features = [ "derive" ] }
 tokio = { version = "1.38.0", features = [ "full" ] }
 reqwest = { version = "0.12.5", features = [ "json" ] }
-crossterm = "0.27.0"
+crossterm = "0.28.0"
 toml = "0.8.14"
 color-eyre = "0.6.3"
 chrono = "0.4.38"
